@@ -1,0 +1,94 @@
+import os
+
+os.environ.setdefault('JETSON_MODEL_NAME', 'JETSON_ORIN_NANO')
+
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Float32
+import Jetson.GPIO as GPIO
+
+
+class SteeringNode(Node):
+
+    def __init__(self):
+        super().__init__('steering_node')
+
+        # Physical header pin 33
+        self.servo_pin = 33
+
+        # Standard hobby-servo PWM frequency
+        self.pwm_frequency = 50
+
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(self.servo_pin, GPIO.OUT)
+
+        self.pwm = GPIO.PWM(
+            self.servo_pin,
+            self.pwm_frequency
+        )
+
+        # 7.5% at 50 Hz = approximately 1.5 ms center pulse
+        self.pwm.start(7.5)
+
+        self.subscription = self.create_subscription(
+            Float32,
+            '/steering_angle',
+            self.steering_callback,
+            10
+        )
+
+        self.get_logger().info('Steering node started!')
+        self.get_logger().info('Servo PWM active on physical pin 33')
+
+    def steering_callback(self, msg):
+
+        steering_angle = msg.data
+
+        # Keep initial testing conservative.
+        # -0.5 = small movement one direction
+        #  0.0 = center
+        # +0.5 = small movement other direction
+        steering_angle = max(-0.5, min(0.5, steering_angle))
+
+        # Convert steering command to servo pulse width.
+        #
+        # -0.5 -> 1.25 ms
+        #  0.0 -> 1.50 ms
+        # +0.5 -> 1.75 ms
+        pulse_ms = 1.5 + (steering_angle * 0.5)
+
+        # 50 Hz PWM has a 20 ms period.
+        # Convert pulse width into duty-cycle percentage.
+        duty_cycle = pulse_ms / 20.0 * 100.0
+
+        self.pwm.ChangeDutyCycle(duty_cycle)
+
+        self.get_logger().info(
+            f'Steering: {steering_angle:.2f} '
+            f'-> Pulse: {pulse_ms:.2f} ms '
+            f'-> Duty: {duty_cycle:.2f}%'
+        )
+
+    def destroy_node(self):
+        self.pwm.stop()
+        GPIO.cleanup()
+        super().destroy_node()
+
+
+def main(args=None):
+
+    rclpy.init(args=args)
+
+    node = SteeringNode()
+
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
