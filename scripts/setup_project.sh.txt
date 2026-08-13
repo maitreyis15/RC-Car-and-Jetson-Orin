@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Exit immediately if a command fails
+set -e
+
+echo "Setting up RC Car project directory structure..."
+
+# ROS2 packages
+mkdir -p ROS2/rc_car_bringup
+mkdir -p ROS2/rc_car_control
+mkdir -p ROS2/rc_car_sensors
+mkdir -p ROS2/rc_car_navigation
+
+# Hardware files
+mkdir -p hardware/schematics
+mkdir -p hardware/pcb
+mkdir -p hardware/wiring
+
+# General scripts
+mkdir -p scripts
+
+# Media
+mkdir -p media/pictures
+mkdir -p media/videos
+
+# README
+touch README.md
+
+echo "Project structure created successfully."
