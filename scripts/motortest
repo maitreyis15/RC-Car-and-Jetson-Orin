@@ -1,0 +1,22 @@
+import Jetson.GPIO as GPIO
+import time
+
+# Current intended ESC signal pin
+ESC_PIN = 15
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(ESC_PIN, GPIO.OUT)
+
+pwm = GPIO.PWM(ESC_PIN, 50)
+
+try:
+    # Neutral ESC command
+    pwm.start(7.5)
+
+    print("Sending neutral PWM to ESC...")
+    time.sleep(3)
+
+finally:
+    pwm.stop()
+    GPIO.cleanup()
+    print("ESC PWM stopped.")
