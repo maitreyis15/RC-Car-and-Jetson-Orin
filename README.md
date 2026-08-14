@@ -2,6 +2,8 @@
 
 # RC Car — Jetson Orin Nano Setup
 
+Maitreyi Sarkar and Sayeed Azam
+
 This project uses an **NVIDIA Jetson Orin Nano** to control an RC car using ROS 2. The Jetson will eventually receive data from the camera/LiDAR and an ML model, then directly command:
 
 * **Steering servo**
