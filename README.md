@@ -230,11 +230,11 @@ The GPIO pins from the Jetson and the signal pins from the ESC, are wired to the
 
 The RC car now has both LiDAR and RGB-D depth sensing integrated with ROS 2 on the Jetson Orin Nano.
 
-LiDAR
+## LiDAR
 
 A YDLIDAR sensor was connected to the Jetson through its USB interface and configured using the ROS 2 YDLIDAR driver. The sensor was successfully detected on /dev/ttyUSB0, began spinning correctly, and published scan data to ROS 2.
 
-Depth Camera
+## Depth Camera
 
 The depth camera was also connected and successfully launched through ROS 2. Both RGB and depth image streams are now available.
 
@@ -243,30 +243,17 @@ With both sensors communicating through ROS 2, the Jetson can now receive 2D LiD
 Proof of function is in the media section of this Github Repo.
 
 
-# 7. Current Project Status
+# 8. Current Project Status
 
-**Working:**
+The Jetson is able to use the GPIO and USB ports to communicate to the motor, steering servo, ESC, Lidar, and Depth Camera.
 
-* Jetson boots and runs normally
-* Network connection configured
-* ROS 2 installed
-* Jetson GPIO control working
-* 50 Hz PWM verified
-* Steering servo working
-* Steering ROS 2 node working
-* Steering commands tested
-* Servo center calibrated
-* ESC PWM timing verified with oscilloscope
-* ESC recognizes a 5 V, ~7.5% duty-cycle signal as neutral
+## Next Steps: Optimizing RC Car Hardware Wiring
+The RC car currently has been tested for each individual component but it has not been optimized to run without being plugged in. The housing for multiple components needs to be fixed in order for the Car to run without being plugged in.
 
-**Next steps:**
-
-1. Add a **3.3 V → 5 V level shifter** to the ESC PWM line.
-2. Verify neutral from the Jetson through the level shifter.
-3. Carefully test forward/reverse throttle ranges.
-4. Create/finalize the ROS 2 motor node.
-5. Combine steering and throttle control.
-6. Integrate LiDAR, camera, and autonomous driving logic.
+1. Update battery housing
+2. Update ESC housing
+3. Create housing for the new buffer, preferably using a perf board
+4. Create housing for the Jetson Orin
 
 ---
 
