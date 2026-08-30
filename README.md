@@ -220,32 +220,27 @@ Jetson signal:      3.3 V
 ESC prefers:        ~5 V
 ```
 
-### Planned solution
+### Solution: SN74AHCT125N buffer
 
 Add a **3.3 V → 5 V logic-level shifter / buffer** between the Jetson PWM output and ESC signal input.
 
-The final signal chain should therefore look like:
+The GPIO pins from the Jetson and the signal pins from the ESC, are wired to the buffer to meet the voltage threshold of the ESC.
 
-```text
-Jetson GPIO
-   |
-   | 3.3 V PWM
-   v
-3.3 V -> 5 V Level Shifter
-   |
-   | 5 V PWM
-   v
-ESC Signal Input
-   |
-   v
-Motor
-```
+# 7. LIDAR and Depth Camera Setup
 
-The Jetson and ESC grounds must still be connected.
-The power for the buffer will be generate from the exposed PWM pins on the ESC.
+The RC car now has both LiDAR and RGB-D depth sensing integrated with ROS 2 on the Jetson Orin Nano.
 
----
+LiDAR
 
+A YDLIDAR sensor was connected to the Jetson through its USB interface and configured using the ROS 2 YDLIDAR driver. The sensor was successfully detected on /dev/ttyUSB0, began spinning correctly, and published scan data to ROS 2.
+
+Depth Camera
+
+The depth camera was also connected and successfully launched through ROS 2. Both RGB and depth image streams are now available.
+
+With both sensors communicating through ROS 2, the Jetson can now receive 2D LiDAR range data, RGB images, and depth information for future perception, mapping, and autonomous navigation development.
+
+Proof of function is in the media section of this Github Repo.
 
 
 # 7. Current Project Status
